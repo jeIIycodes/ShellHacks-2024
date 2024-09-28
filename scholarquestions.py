@@ -3,7 +3,7 @@ import re
 def collect_scholarship_info():
     scholarship_info = {}
 
-    # Helper function to validate numeric input within a range
+    # attempt @ validate function: numeric input within range using regex
     def get_valid_input(prompt, valid_options=None, regex=None):
         while True:
             user_input = input(prompt).strip().lower()
@@ -21,7 +21,7 @@ def collect_scholarship_info():
     scholarship_info['Education']['Current FIU Student Status'] = input("Current FIU student status (freshman, sophomore, etc.): ").capitalize()
     scholarship_info['Education']['Field of Study/Major/Program'] = input("Field of Study/Major/Program: ").title()
 
-    # Graduation Date Input (MM/YYYY)
+    # Graduation Date Input (MM/YYYY) // attempt @ date validation
     while True:
         grad_date = input("Expected graduation date (MM/YYYY): ")
         if re.match(r"^(0[1-9]|1[0-2])\/\d{4}$", grad_date):
@@ -30,7 +30,7 @@ def collect_scholarship_info():
         else:
             print("Invalid date format. Please enter in MM/YYYY format.")
 
-    # GPA Input Validation (X.X / 4.0)
+    # GPA Input Validation (X.X / 4.0) // attempt @ date validation
     while True:
         gpa = input("GPA (if applicable) (X.X/4.0): ")
         if gpa == '' or (gpa.replace('.', '', 1).isdigit() and 0.0 <= float(gpa) <= 4.0):
