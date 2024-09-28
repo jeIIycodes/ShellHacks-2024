@@ -34,7 +34,7 @@ def prompt():
     model = genai.GenerativeModel("gemini-1.5-flash")
     print("Generating content...")
     response = model.generate_content(["Give me a sample essay using these parameters.", json_data])
-
+    print(response.text)
     return { 'status' : 'ok', 'response' : response.text }
         
 
