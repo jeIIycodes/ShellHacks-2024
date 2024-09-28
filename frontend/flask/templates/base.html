@@ -38,7 +38,17 @@
                             <a class="nav-link" href="{{ url_for('user.profile') }}">Home</a>
                         </li>
                         <!-- Add more navigation items if needed -->
-                    </ul>
+                        <ul class="navbar-nav me-auto"> 
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('user.datapage') }}">Whats this Data?</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('user.scholarships') }}">Scholarships</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('user.resources') }}">Resources</a>
+                            </li>
+                        </ul>
                     <ul class="navbar-nav ms-auto">
                         {% if session.get('user') %}
                         <li class="nav-item dropdown">
@@ -84,7 +94,7 @@
                     <!-- Content block -->
                     {% block content %}{% endblock %}
                     <div class="card-footer text-muted">
-                        Made by Michael Bennie, Anthony, Chistabel, Anne
+                        Made by Bennie, Anthony, Chistabel, Anne
                     </div>
                 </div>
             </div>

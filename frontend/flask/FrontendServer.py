@@ -4,8 +4,7 @@ from flask import Flask, render_template
 from Extensions import oauth  # Assuming Extensions.py handles the oauth initialization
 from Config import config  # Load configuration
 from Blueprints.User import user_bp  # Import the user authentication blueprint
-from Blueprints.Assesment import assesment_bp
-from Blueprints.Testing import test_bp
+
 app = Flask(__name__)
 app.secret_key = config["WEBAPP"]["SECRET_KEY"]
 
@@ -28,12 +27,11 @@ oauth.register(
 
 # Register the user authentication blueprint
 app.register_blueprint(user_bp)
-app.register_blueprint(assesment_bp)
-app.register_blueprint(test_bp)
+
 # Home route
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return 'DD'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002,debug=True)
