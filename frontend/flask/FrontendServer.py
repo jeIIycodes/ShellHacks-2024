@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from Extensions import oauth  # Assuming Extensions.py handles the oauth initialization
 from Config import config  # Load configuration
 from Blueprints.User import user_bp  # Import the user authentication blueprint
-
+from Blueprints.Assesment import assesment_bp
 app = Flask(__name__)
 app.secret_key = config["WEBAPP"]["SECRET_KEY"]
 
@@ -27,6 +27,7 @@ oauth.register(
 
 # Register the user authentication blueprint
 app.register_blueprint(user_bp)
+app.register_blueprint(assesment_bp)
 
 # Home route
 @app.route('/')
