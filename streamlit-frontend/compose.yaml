@@ -1,0 +1,12 @@
+services:
+  service1:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - mode: ingress
+        target: 8501
+        published: 8501
+    environment:
+      - STREAMLIT_SERVER_PORT=8501
