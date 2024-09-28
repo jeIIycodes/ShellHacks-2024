@@ -3,7 +3,7 @@
 from flask import Blueprint, session, redirect, url_for, render_template
 from Extensions import oauth  # Assuming oauth is initialized in Extensions.py
 from urllib.parse import urlencode, quote_plus
-from config import config
+from Config import config
 
 auth0_config = config['AUTH0']
 domain = auth0_config["DOMAIN"]
@@ -45,3 +45,5 @@ def logout():
         "client_id": client_id
     }
     return redirect(f"https://{domain}/v2/logout?" + urlencode(params, quote_via=quote_plus))
+
+

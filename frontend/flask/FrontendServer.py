@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template
 from Extensions import oauth  # Assuming Extensions.py handles the oauth initialization
-from config import config  # Load configuration
+from Config import config  # Load configuration
 from Blueprints.User import user_bp  # Import the user authentication blueprint
 
 app = Flask(__name__)
