@@ -10,7 +10,7 @@ from flask import Blueprint
 from datetime import datetime
 from frontend.flask.Forms import ScholarshipApplicationForm  # Ensure correct import path
 
-assesment_bp = Blueprint("lp", __name__, url_prefix="/assessment")  # Corrected spelling to "assessment"
+assesment_bp = Blueprint("assesment", __name__, url_prefix="/assessment")  # Corrected spelling to "assessment"
 
 
 

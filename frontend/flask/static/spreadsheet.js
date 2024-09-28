@@ -1,5 +1,5 @@
 // Path to your CSV file
-const csvFilePath = '/static/student_spending.csv';
+const csvFilePath = '../static/student_spending.csv';
 
 // Function to fetch and display CSV data
 function displaySpreadsheet() {
