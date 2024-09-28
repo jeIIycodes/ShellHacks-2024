@@ -1,7 +1,6 @@
 # app.py
 
 from flask import (
-    Flask,
     render_template,
     redirect,
     url_for,
@@ -12,6 +11,7 @@ from datetime import datetime
 from frontend.flask.Forms import ScholarshipApplicationForm  # Ensure correct import path
 
 assesment_bp = Blueprint("lp", __name__, url_prefix="/assessment")  # Corrected spelling to "assessment"
+
 
 
 @assesment_bp.route('/', methods=['GET', 'POST'])
@@ -35,14 +35,14 @@ def scholarship_application():
         # Process the form data
         scholarship_data = {
             'Education': {
-                'Current FIU Student Status': form.current_status.data,
+                'Years in College': form.years_in_college.data.title(),
                 'Field of Study/Major/Program': dict(form.field_of_study.choices).get(form.field_of_study.data),
                 'Expected Graduation Date (Season Year)': form.expected_graduation.data.replace('-', ' ').title(),
-                'GPA (if applicable)': str(form.gpa.data) if form.gpa.data is not None else ''
+                'GPA (if applicable)': f"{form.gpa.data:.2f}" if form.gpa.data is not None else 'N/A'
             },
             'Personal Information': {
-                'Name': form.legal_name.data,
-                'Preferred Name': form.preferred_name.data,
+                'Name': form.legal_name.data.title(),
+                'Preferred Name': form.preferred_name.data.title() if form.preferred_name.data else 'N/A',
                 'Date of Birth (MM/DD/YYYY)': form.date_of_birth.data,
                 'Contact Information': {
                     'Email': form.contact_email.data,
@@ -50,10 +50,10 @@ def scholarship_application():
                 }
             },
             'Demographics': {
-                'Gender Identity': form.gender_self_describe.data if form.gender_identity.data == 'self-describe' else form.gender_identity.data.title(),
+                'Gender Identity': form.gender_self_describe.data.title() if form.gender_identity.data == 'self-describe' else form.gender_identity.data.title(),
                 'Florida Resident': form.florida_resident.data.title(),
                 'First-Generation College Student': form.first_gen_college_student.data.title(),
-                'Race/Ethnicity': form.race_self_describe.data if form.race_ethnicity.data == 'self-describe' else form.race_ethnicity.data.title()
+                'Race/Ethnicity': form.race_self_describe.data.title() if form.race_ethnicity.data == 'self-describe' else form.race_ethnicity.data.title()
             },
             'Financial Information': {
                 'Mean Yearly Income': f"${form.mean_yearly_income.data:,.2f}",
