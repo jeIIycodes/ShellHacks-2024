@@ -33,3 +33,8 @@ Short Description: An app that demonstrates how to use the OpenAI API with Pytho
 Tags: Python, Flask, OpenAI, AI, Python
 
 Languages: python
+
+
+To run the project
+pip install -r python-ai-backend/app/requirements.txt
+python python-ai-backend/app/main.py

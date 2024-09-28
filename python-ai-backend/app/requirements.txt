@@ -1,3 +1,4 @@
 uwsgi
 flask
-openai
+google.generativeai
+python-dotenv
