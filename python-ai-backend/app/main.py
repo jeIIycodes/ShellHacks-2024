@@ -11,10 +11,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    print("abddd")
     return { 'status' : 'ok' }
 
-
+#Need to add /prompt to extension to ge it running correctly (note: add the applicable weblinks file)
 @app.route("/prompt", methods=['POST','GET'])
 def prompt():
     genai.configure(api_key=os.getenv('API_KEY'))
