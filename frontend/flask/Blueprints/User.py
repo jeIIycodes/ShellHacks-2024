@@ -15,8 +15,10 @@ user_bp = Blueprint("user", __name__, url_prefix="/")
 # Login route
 @user_bp.route('/login')
 def login():
-    return oauth.auth0.authorize_redirect(redirect_uri=url_for("user.callback", _external=True), audience=audience)
-
+    return oauth.auth0.authorize_redirect(
+        redirect_uri=url_for("user.callback", _external=True),
+        audience=audience
+    )
 
 # Auth0 callback route
 @user_bp.route('/callback')
@@ -24,7 +26,6 @@ def callback():
     token = oauth.auth0.authorize_access_token()
     session["user"] = token
     return redirect(url_for("user.profile"))
-
 
 # Profile route (requires authentication)
 @user_bp.route('/profile')
@@ -35,7 +36,6 @@ def profile():
     user_info = session["user"]["userinfo"]
     return render_template('profile.html', user=user_info)
 
-
 # Logout route
 @user_bp.route('/logout')
 def logout():
@@ -45,5 +45,3 @@ def logout():
         "client_id": client_id
     }
     return redirect(f"https://{domain}/v2/logout?" + urlencode(params, quote_via=quote_plus))
-
-
