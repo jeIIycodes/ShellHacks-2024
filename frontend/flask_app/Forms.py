@@ -9,6 +9,7 @@ from wtforms import (
     IntegerField,
     SubmitField,
 )
+from wtforms.fields import DateField
 from wtforms.validators import (
     DataRequired,
     Optional,
@@ -64,12 +65,10 @@ class ScholarshipApplicationForm(FlaskForm):
         ('other', 'Other (please specify)')
     ]
 
-    major = SelectField('Field of Study: Major', choices=majors, validators=[DataRequired()])
-    other_major = StringField('If Other, please specify your major')
+    # Education Information
+    years_in_college = SelectField(
+        'Year in College',
 
-
-    academic_standing = SelectField(
-        'Academic Standing',
         choices=[
             ('', 'Select your academic standing'),
             ('freshman', 'Freshman'),
@@ -103,7 +102,27 @@ gpa = DecimalField(
         places=2
     )
 
-gender_identity = SelectField(
+    # Personal Information
+    legal_name = StringField(
+        'Name (as it appears on legal documents)',
+        validators=[DataRequired()]
+    )
+    preferred_name = StringField(
+        'Preferred name (if different)',
+        validators=[Optional()]
+    )
+
+    # Date of Birth Input with Date Picker
+    date_of_birth = DateField(
+        'Date of Birth (MM/DD/YYYY)',
+        format='%m/%d/%Y', validators=[DataRequired()]
+        )
+
+
+
+    # Gender Identity
+    gender_identity = SelectField(
+
         'Gender Identity',
         choices=[
             ('woman', 'Woman'),
@@ -119,12 +138,12 @@ gender_identity = SelectField(
     # Additional Demographics
 fl_resident = RadioField(
         'Are you a Florida resident?',
-        choices=[('yes', 'Yes'), ('no', 'No')],
+        choices=[(True, 'Yes'), (False, 'No')],
         validators=[DataRequired()]
     )
 first_gen_college_student = RadioField(
         'Are you a first-generation college student?',
-        choices=[('yes', 'Yes'), ('no', 'No')],
+        choices=[(True, 'Yes'), (False, 'No')],
         validators=[DataRequired()]
     )
 
@@ -223,14 +242,11 @@ fafsa = RadioField(
 
 submit = SubmitField('Submit')
 
-    # Custom Validators
-def validate_gpa(self, field):
-        if field.data is not None:
-            if field.data < 0.0 or field.data > 4.0:
-                raise ValidationError("GPA must be between 0.0 and 4.0")
-            if len(str(field.data).split('.')[-1]) > 2:
-                raise ValidationError("GPA should have at most 2 decimal places")
-            
-def validate_estimated_educational_expenses(self, field):
-        if field.data > 100000:
-            raise ValidationError("Please contact the financial aid office for expenses exceeding $100,000")
+    def validate_gender_self_describe(form, field):
+        if form.gender_identity.data == 'self-describe' and not field.data.strip():
+            raise ValidationError("Please self-describe your gender.")
+
+    def validate_race_self_describe(form, field):
+        if form.race_ethnicity.data == 'self-describe' and not field.data.strip():
+            raise ValidationError("Please self-describe your race/ethnicity.")
+
