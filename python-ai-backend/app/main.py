@@ -56,7 +56,10 @@ def get_data():
 #Need to add /prompt to extension to ge it running correctly (note: add the applicable weblinks file)
 @app.route("/prompt", methods=['POST'])
 def prompt():
-    genai.configure(api_key=os.environ('GOOGLE_API_KEY'))
+    dotenv_path = os.path.join(os.path.dirname(__file__), 'python-ai-backend/app/.env')
+    load_dotenv(dotenv_path) 
+    api_key = os.getenv("GOOGLE_API_KEY")
+    genai.configure(api_key)
     try:
         # Parse the incoming JSON data
         params_response = requests.get('http://localhost:5000/api/params')
