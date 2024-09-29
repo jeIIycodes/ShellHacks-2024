@@ -1,8 +1,9 @@
 import google.generativeai as genai
 import os
 import json
+import pandas as pd
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template
 from flask import request
 
 
@@ -44,8 +45,6 @@ def prompt():
     print(response.text)
 
     return { 'status' : 'ok', 'response' : response.text }
-        
-
+    
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
-
+    app.run(debug=True, host='0.0.0.0',port=5002)

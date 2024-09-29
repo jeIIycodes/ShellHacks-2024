@@ -2,9 +2,11 @@
 
 from flask import Blueprint, session, redirect, url_for, render_template
 import pandas as pd
-from Extensions import oauth  # Assuming oauth is initialized in Extensions.py
+from frontend.flask_app.Extensions import oauth
+from frontend.flask_app.Models import db, UserModel
 from urllib.parse import urlencode, quote_plus
-from Config import config
+from frontend.flask_app.Config import config
+
 
 auth0_config = config['AUTH0']
 domain = auth0_config["DOMAIN"]
@@ -26,6 +28,26 @@ def login():
 def callback():
     token = oauth.auth0.authorize_access_token()
     session["user"] = token
+    user_info = token["userinfo"]
+    auth0_id = user_info["sub"]
+    # Check if user exists in the database
+    user = UserModel.query.filter_by(auth0_id=auth0_id).first()
+    assesment = user.responses
+    if not user or not assesment:
+        # Create a new user
+        user = UserModel(
+            auth0_id=auth0_id,
+            email=user_info.get("email"),
+            name=user_info.get("name")
+        )
+        if not user:
+            db.session.add(user)
+            db.session.commit()
+        return redirect(url_for("assessment.scholarship_application"))
+
+    # Store user ID in session
+    session["user_id"] = user.id
+
     return redirect(url_for("user.profile"))
 
 # Profile route (requires authentication)
