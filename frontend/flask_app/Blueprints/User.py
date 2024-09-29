@@ -3,7 +3,7 @@
 from flask import Blueprint, session, redirect, url_for, render_template
 import pandas as pd
 from frontend.flask_app.Extensions import oauth
-from frontend.flask_app.Models import db, UserModel
+from frontend.flask_app.Models import db, UserModel, ResponseModel
 from urllib.parse import urlencode, quote_plus
 from frontend.flask_app.Config import config
 
@@ -57,8 +57,16 @@ def profile():
     if "user" not in session:
         return redirect(url_for("user.login"))
 
+    # Get user info from session
     user_info = session["user"]["userinfo"]
-    return render_template('profile.html', user=user_info)
+
+    # Query the database for the user's response based on their ID
+    user = UserModel.query.filter_by(auth0_id=user_info['sub']).first()
+
+    # Fetch response related to the user if it exists
+    response = ResponseModel.query.filter_by(user_id=user.id).first()
+
+    return render_template('dashboard_widgets.html', user=user_info, response=response)
 
 @user_bp.route('/datapage')
 def datapage():

@@ -8,7 +8,7 @@ from wtforms import (
     DecimalField,
     SubmitField,
 )
-from wtforms.fields.core import DateField
+from wtforms.fields import DateField
 from wtforms.validators import (
     DataRequired,
     Optional,
