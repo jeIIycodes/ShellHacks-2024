@@ -3,11 +3,11 @@
 {% extends "base.html" %}
 
 {% block title %}
-Scholarship Application
+Find Your Scholarships
 {% endblock %}
 
 {% block content_title %}
-Scholarship Application
+Find Your Scholarships
 {% endblock %}
 
 {% block head %}
@@ -15,6 +15,28 @@ Scholarship Application
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <!-- Include Flatpickr CSS -->
 <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+<style>
+    /* Center the form and set a maximum width */
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    /* Style the submit button */
+    .btn-submit {
+        display: block;
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 18px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -68,20 +90,6 @@ Scholarship Application
         {{ form.date_of_birth.label(class="form-label") }}
         {{ form.date_of_birth(class="form-control", id="date_of_birth") }}
         {% for error in form.date_of_birth.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ form.contact_email.label(class="form-label") }}
-        {{ form.contact_email(class="form-control") }}
-        {% for error in form.contact_email.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ form.contact_phone.label(class="form-label") }}
-        {{ form.contact_phone(class="form-control") }}
-        {% for error in form.contact_phone.errors %}
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
@@ -163,8 +171,8 @@ Scholarship Application
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
-    <div class="mt-4">
-        {{ form.submit(class="btn btn-primary") }}
+    <div class="mt-4 text-center">
+        {{ form.submit(class="btn-submit") }}
     </div>
 </form>
 {% endblock %}
