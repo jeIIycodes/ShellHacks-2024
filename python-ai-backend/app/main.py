@@ -1,10 +1,11 @@
 import google.generativeai as genai
 import os
 import json
-import pandas as pd
-from dotenv import load_dotenv
-from flask import Flask, render_template
+from flask import Flask
 from flask import request
+import requests
+from flask import jsonify
+from SECRETS import GOOGLE_API_KEY
 
 
 app = Flask(__name__)
@@ -14,37 +15,49 @@ app = Flask(__name__)
 def index():
     return { 'status' : 'ok' }
 
+# Allowed Parameters:
+#    years_in_college
+#    field_of_study
+#    gender_self_describe
+#    florida_resident
+#    first_gen_college_student
+#    race_self_describe
+#    mean_yearly_income
+#    expected_yearly_scholarships
+#    housing
+
 #Need to add /prompt to extension to ge it running correctly (note: add the applicable weblinks file)
-@app.route("/prompt", methods=['POST','GET'])
+@app.route("/prompt", methods=['GET'])
 def prompt():
-    genai.configure(api_key=os.getenv('API_KEY'))
+    print("Request:", request.args)
+    genai.configure(api_key=GOOGLE_API_KEY)
 
-    messages = [ 
-        # System prompt used to set context for the conversation
-        # { "role": "system", "content": "You are an experienced software engineer." }
-    ]
+    prompt_data=""
 
-    #prompt_text = request.get_data()
-    #prompt_text = prompt_text.decode('utf-8')
+    for arg in request.args:
+        print("ARG:",arg)
+        if arg in ["years_in_college","field_of_study","gender_self_describe",
+                    "florida_resident","first_gen_college_student","race_self_describe",
+                    "mean_yearly_income","expected_yearly_scholarships","housing","essay_prompt","essay_title","essay_content"]:
+            prompt_data+=arg+":"+request.args[arg]+" "
+            print("prompt:",prompt_data)
+        else:
+            return "Unknown Prameter: "+arg,400
+    try:
+        # call the gemini-1.5-flash
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        print("Generating content...")
+        response = model.generate_content(["Give me a sample essay for scholarships using these parameters.", prompt_data])
+        print(response)
+        if response.text:
+            return response.text, 200
+        else:
+            return "Error", 408 
+    except Exception as e:
+        print("Error:",e)
+        return str(e), 400
+        
 
-    # append user prompt from request
-    messages.append({ "role": "user", "content": "hello how are you?" })
-
-    # call the gemini-1.5-flash
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    print("Generating content...")
-    chat = model.start_chat(
-    history=[
-        {"role": "user", "parts": "Hello"},
-        {"role": "model", "parts": "Great to meet you. What would you like to know?"},
-    ]
-)
-    response = chat.send_message("I have 2 dogs in my house.")
-    print(response.text)
-    response = chat.send_message("How many paws are in my house?")
-    print(response.text)
-
-    return { 'status' : 'ok', 'response' : response.text }
-    
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0',port=5002)
+    app.run(debug=True, host='0.0.0.0', port=5000)
+
