@@ -14,8 +14,6 @@ class ResponseModel(db.Model):
     legal_name = db.Column(db.String(255))
     preferred_name = db.Column(db.String(255))
     date_of_birth = db.Column(db.Date)
-    contact_email = db.Column(db.String(255))
-    contact_phone = db.Column(db.String(20))
     gender_identity = db.Column(db.String(50))
     gender_self_describe = db.Column(db.String(255))
     florida_resident = db.Column(db.Boolean)

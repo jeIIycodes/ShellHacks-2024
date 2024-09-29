@@ -43,6 +43,7 @@ def callback():
         if not user:
             db.session.add(user)
             db.session.commit()
+        session["user_id"] = user.id
         return redirect(url_for("assessment.scholarship_application"))
 
     # Store user ID in session
