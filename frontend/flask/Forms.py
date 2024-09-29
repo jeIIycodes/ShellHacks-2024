@@ -14,11 +14,17 @@ from wtforms.validators import (
     NumberRange,
     Email,
     ValidationError,
+    Length
 )
 import re
 
 class ScholarshipApplicationForm(FlaskForm):
-    # List of majors
+    # 1. Personal Info
+    f_name = StringField('First Name', 
+        validators = [DataRequired(), Length(min=2, max=50, message ='Please enter a valid First Name.' )])
+    l_name = StringField('Last Name', validators = [DataRequired(),Length(min=2, max=50, message ='Please enter a valid First Name.' )])
+    
+    # 2. Academic Info
     majors = [
         ('accounting', 'Accounting'),
         ('anthropology', 'Anthropology'),
@@ -86,16 +92,6 @@ class ScholarshipApplicationForm(FlaskForm):
         'GPA (if applicable) (X.X/4.0)',
         validators=[Optional(), NumberRange(min=0.0, max=4.0)],
         places=2
-    )
-
-    # Personal Information
-    legal_name = StringField(
-        'Name (as it appears on legal documents)',
-        validators=[DataRequired()]
-    )
-    preferred_name = StringField(
-        'Preferred name (if different)',
-        validators=[Optional()]
     )
 
     # Date of Birth Input with Date Picker

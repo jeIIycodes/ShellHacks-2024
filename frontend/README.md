@@ -38,4 +38,4 @@ Tags: Flask, Python
 Languages: python
 
 pip install -r frontend/flask/requirements.txt
-python frontend/flask/Forms.py
+python frontend/flask/FrontendServer.py
