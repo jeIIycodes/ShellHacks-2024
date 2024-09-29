@@ -54,7 +54,7 @@ class ScholarshipApplicationForm(FlaskForm):
     # 'other' input option ^ if major is not listed ***
 
     # Education Information
-    year_in_college = SelectField(
+    years_in_college = SelectField(
         'Year in College',
         choices=[
             ('1', '1st Year'),
