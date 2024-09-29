@@ -6,6 +6,7 @@ from wtforms import (
     SelectField,
     RadioField,
     DecimalField,
+    IntegerField,
     SubmitField,
 )
 from wtforms.validators import (
@@ -96,14 +97,12 @@ graduation_year = SelectField(
     validators=[DataRequired()]
 )
 
-    # GPA Input
 gpa = DecimalField(
         'GPA (if applicable)',
         validators=[Optional(), NumberRange(min=0.0, max=4.0)],
         places=2
     )
 
-    # Gender Identity
 gender_identity = SelectField(
         'Gender Identity',
         choices=[
@@ -129,7 +128,17 @@ first_gen_college_student = RadioField(
         validators=[DataRequired()]
     )
 
-    # Race/Ethnicity
+citizenship_status = SelectField(
+        'Citizenship/Residency Status',
+        choices=[
+            ('us_citizen', 'U.S. Citizen'),
+            ('permanent_resident', 'U.S. Permanent Resident'),
+            ('international_f1', 'International Student (F-1 Visa)'),
+            ('international_j1', 'International Student (J-1 Visa)')
+        ],
+        validators=[DataRequired()]
+    )
+
 race_ethnicity = SelectField(
         'Race/Ethnicity',
         choices=[
@@ -144,24 +153,70 @@ race_ethnicity = SelectField(
         validators=[DataRequired()]
     )
 
-    # Financial
-mean_yearly_income = DecimalField(
-        'Mean Yearly Income',
-        validators=[DataRequired(), NumberRange(min=0)],
-        places=2
-    )
+    # 3. Financial Qs
 
-expected_yearly_scholarships = DecimalField(
-        'Expected Yearly Scholarships',
-        validators=[DataRequired(), NumberRange(min=0)],
-        places=2
+employed_or_nah = RadioField(
+        'Are you currently employed?',
+        choices=[('yes', 'Yes'), ('no', 'No')],
+        validators=[DataRequired()]
     )
 
 housing = SelectField(
-        'Housing',
+        'Current Housing Circumstance',
         choices=[
             ('on-campus', 'On-campus'),
             ('off-campus', 'Off-campus'),
+        ],
+        validators=[DataRequired()]
+    )
+
+    is_financially_independent = RadioField(
+        'Are you financially independent?',
+        choices=[('yes', 'Yes'), ('no', 'No')],
+        validators=[DataRequired()]
+    )
+
+    # Household Income
+    household_income = SelectField(
+        'What is your annual household income?',
+        choices=[
+            ('', 'Select household income range'),
+            ('less_than_25k', 'Less than $25,000'),
+            ('25k_to_49k', '$25,000 - $49,999'),
+            ('50k_to_74k', '$50,000 - $74,999'),
+            ('75k_to_99k', '$75,000 - $99,999'),
+            ('100k_or_more', '$100,000 or more')
+        ],
+        validators=[DataRequired()]
+    )
+
+ # Dependents
+    dependents = IntegerField(
+        'Number of dependents in household (including yourself)',
+        validators=[
+            DataRequired(),
+            NumberRange(min=1, max=20, message="Please enter a number between 1 and 20")
+        ],
+        render_kw={"placeholder": "Enter number between 1 and 20"}
+    )
+
+ # Educational Expenses - Based on FIU Tuition Calculator *can link in question*
+    est_expenses = DecimalField(
+        'Estimated annual educational expenses at FIU',
+        validators=[
+            DataRequired(),
+            NumberRange(min=0, max=100000, message="Please enter an amount between $0 and $100,000")
+        ],
+        render_kw={"placeholder": "Enter amount in USD (max $100,000)"}
+    )
+
+ # FAFSA Eligibility *can link below in question*
+    fafsa = RadioField(
+        'Are you eligible to file a FAFSA (Free Application for Federal Student Aid)?',
+        choices=[
+            ('yes', 'Yes'),
+            ('no', 'No'),
+            ('unsure', 'I\'m not sure')
         ],
         validators=[DataRequired()]
     )
@@ -175,3 +230,7 @@ def validate_gpa(self, field):
                 raise ValidationError("GPA must be between 0.0 and 4.0")
             if len(str(field.data).split('.')[-1]) > 2:
                 raise ValidationError("GPA should have at most 2 decimal places")
+            
+def validate_estimated_educational_expenses(self, field):
+        if field.data > 100000:
+            raise ValidationError("Please contact the financial aid office for expenses exceeding $100,000")
