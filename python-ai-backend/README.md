@@ -26,11 +26,11 @@ cat prompt.txt | curl -H "Content-Type: application/text" -d @- https://xxxxxxxx
 
 ---
 
-Title: Python & Flask & OpenAI
+Title: Python & Flask & Gemini
 
-Short Description: An app that demonstrates how to use the OpenAI API with Python and Flask.
+Short Description: An app that demonstrates how to use the Gemini API with Python and Flask.
 
-Tags: Python, Flask, OpenAI, AI, Python
+Tags: Python, Flask, Gemini, AI, Python
 
 Languages: python
 
