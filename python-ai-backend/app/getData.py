@@ -18,19 +18,18 @@ app = Flask(__name__)
 # expected_yearly_scholarships
 # housing
 @app.route('/api/params', methods=['GET'])
-def get_items():
-    years_in_college = request.args.get('years_in_college')
-    field_of_study = request.args.get('field_of_study')
-    gender_self_describe = request.args.get('gender_self_describe')
-    florida_resident = request.args.get('florida_resident')
-    first_gen_college_student = request.args.get('first_gen_college_student')
-    race_self_describe = request.args.get('race_self_describe')
-    mean_yearly_income = request.args.get('mean_yearly_income')
-    expected_yearly_scholarships = request.args.get('expected_yearly_scholarships')
+def get_data():
+    years_in_college = request.args.get('years_in_college', default=0)
+    field_of_study = request.args.get('field_of_study', default=None)
+    gender_self_describe = request.args.get('gender_self_describe', default=None)
+    florida_resident = request.args.get('florida_resident', default=No)
+    first_gen_college_student = request.args.get('first_gen_college_student', default=No)
+    race_self_describe = request.args.get('race_self_describe', default=None)
+    mean_yearly_income = request.args.get('mean_yearly_income', default=0)
+    expected_yearly_scholarships = request.args.get('expected_yearly_scholarships', default=0)
     housing = request.args.get('housing')
     
-     # Create a dictionary of the parameters
-    params = {
+    data = {
         'years_in_college': years_in_college,
         'field_of_study': field_of_study,
         'gender_self_describe': gender_self_describe,
@@ -42,7 +41,17 @@ def get_items():
         'housing': housing
     }
 
-    return jsonify(params)
+    #return jsonify(data), 200
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    #Test return
+    return jsonify({
+        "years_in_college": 4,
+        "field_of_study": "Computer Science",
+        "gender_self_describe": "male",
+        "florida_resident": True,
+        "first_gen_college_student": False,
+        "race_self_describe": "white",
+        "mean_yearly_income": 60000,
+        "expected_yearly_scholarships": 10000,
+        "housing": "on-campus"
+    })
