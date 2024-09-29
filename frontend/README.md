@@ -36,3 +36,6 @@ Short Description: A basic Flask to do app.
 Tags: Flask, Python
 
 Languages: python
+
+pip install -r frontend/flask/requirements.txt
+python frontend/flask/FrontendServer.py
