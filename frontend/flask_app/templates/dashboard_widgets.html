@@ -270,28 +270,7 @@ Dashboard
             document.getElementById('expectedYearlyScholarships').textContent = response.expected_yearly_scholarships !== null ? `$${response.expected_yearly_scholarships.toLocaleString()}` : 'N/A';
         }
 
-        // Fetch Flask parameters passed from the Flask route
-        const sampleUser = {
-            name: "{{ user.name }}",
-            email: "{{ user.email }}"
-        };
 
-        const sampleResponse = {
-            field_of_study: "{{ response.field_of_study if response else 'N/A' }}",
-            gpa: {{ response.gpa if response and response.gpa is not none else 'null' }},
-            expected_graduation: "{{ response.expected_graduation if response else 'N/A' }}",
-            gender_identity: "{{ response.gender_identity if response else 'N/A' }}",
-            first_gen_college_student: {{ 'true' if response and response.first_gen_college_student else 'false' }},
-            race_ethnicity: "{{ response.race_ethnicity if response else 'N/A' }}",
-            mean_yearly_income: {{ response.mean_yearly_income if response and response.mean_yearly_income is not none else 'null' }},
-            expected_yearly_scholarships: {{ response.expected_yearly_scholarships if response and response.expected_yearly_scholarships is not none else 'null' }},
-            housing: "{{ response.housing if response else 'N/A' }}"
-        };
-
-        // Initialize the Interactive User Card with actual data from Flask
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeInteractiveCard(sampleUser, sampleResponse);
-        });
     </script>
 
     <!-- JavaScript for Tuition & Fees Flip Card -->
