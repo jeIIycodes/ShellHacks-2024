@@ -12,20 +12,24 @@ from wtforms.validators import (
     DataRequired,
     Optional,
     NumberRange,
-    Email,
     ValidationError,
     Length
 )
 import re
 
 class ScholarshipApplicationForm(FlaskForm):
+
     # 1. Personal Info
     f_name = StringField('First Name', 
         validators = [DataRequired(), Length(min=2, max=50, message ='Please enter a valid First Name.' )])
-    l_name = StringField('Last Name', validators = [DataRequired(),Length(min=2, max=50, message ='Please enter a valid First Name.' )])
+    l_name = StringField('Last Name', validators = [DataRequired(),Length(min=2, max=50, message ='Please enter a valid Last Name.' )])
     
-    # 2. Academic Info
+    date_of_birth = StringField('Date of Birth (MM/DD/YYYY)', validators=[DataRequired(message="Please enter date in MM/DD/YYYY format.")])
+
+
+    # 2. Academic Info Updated
     majors = [
+        ('', 'Select a Major'),
         ('accounting', 'Accounting'),
         ('anthropology', 'Anthropology'),
         ('art', 'Art'),
@@ -56,61 +60,51 @@ class ScholarshipApplicationForm(FlaskForm):
         ('sociology', 'Sociology'),
         ('software-engineering', 'Software Engineering'),
         ('statistics', 'Statistics'),
+        ('other', 'Other (please specify)')
     ]
-    # 'other' input option ^ if major is not listed ***
 
-    # Education Information
-    years_in_college = SelectField(
-        'Years in College',
+    major = SelectField('Field of Study: Major', choices=majors, validators=[DataRequired()])
+    other_major = StringField('If Other, please specify your major')
+
+
+    academic_standing = SelectField(
+        'Academic Standing',
         choices=[
-            ('1', '1st Year'),
-            ('2', '2nd Year'),
-            ('3', '3rd Year'),
-            ('4', '4th Year'),
-            ('5', '5th Year'),
-            ('6', '6th Year'),
+            ('', 'Select your academic standing'),
+            ('freshman', 'Freshman'),
+            ('sophomore', 'Sophomore'),
+            ('junior', 'Junior'),
+            ('senior', 'Senior'),
+            ('graduate', 'Graduate')
         ],
         validators=[DataRequired()]
     )
 
-    # Field of Study/Major/Program - Now a searchable dropdown
-    field_of_study = SelectField(
-        'Field of Study/Major/Program',
-        choices=majors,
-        validators=[DataRequired()]
-    )
+graduation_month = SelectField(
+'Expected Graduation Month',
+choices=[
+('Spring', 'Spring'),
+     ('Fall', 'Fall'),
+        ('Summer', 'Summer')
+    ],
+    validators=[DataRequired()]
+)
 
-    # Expected Graduation Date (Season Year) - dropdown
-    expected_graduation = SelectField(
-        'Expected Graduation Date (Season Year)',
-        choices=[],  # To be populated dynamically
-        validators=[DataRequired()]
-    )
+graduation_year = SelectField(
+    'Expected Graduation Year',
+    choices=[(str(year), str(year)) for year in range(2024, 2030)],  # Example years
+    validators=[DataRequired()]
+)
 
     # GPA Input
-    gpa = DecimalField(
-        'GPA (if applicable) (X.X/4.0)',
+gpa = DecimalField(
+        'GPA (if applicable)',
         validators=[Optional(), NumberRange(min=0.0, max=4.0)],
         places=2
     )
 
-    # Date of Birth Input with Date Picker
-    date_of_birth = StringField(
-        'Date of Birth (MM/DD/YYYY)',
-        validators=[DataRequired(message="Please enter date in MM/DD/YYYY format.")]
-    )
-
-    contact_email = StringField(
-        'Email',
-        validators=[DataRequired(), Email()]
-    )
-    contact_phone = StringField(
-        'Phone Number',
-        validators=[DataRequired()]
-    )
-
     # Gender Identity
-    gender_identity = SelectField(
+gender_identity = SelectField(
         'Gender Identity',
         choices=[
             ('woman', 'Woman'),
@@ -118,30 +112,25 @@ class ScholarshipApplicationForm(FlaskForm):
             ('non-binary', 'Non-binary'),
             ('transgender', 'Transgender'),
             ('gender-non-conforming', 'Gender non-conforming'),
-            ('self-describe', 'Self-describe'),
             ('prefer-not-to-say', 'Prefer not to say')
         ],
         validators=[DataRequired()]
     )
-    gender_self_describe = StringField(
-        'Please self-describe your gender',
-        validators=[Optional()]
-    )
 
     # Additional Demographics
-    florida_resident = RadioField(
+fl_resident = RadioField(
         'Are you a Florida resident?',
         choices=[('yes', 'Yes'), ('no', 'No')],
         validators=[DataRequired()]
     )
-    first_gen_college_student = RadioField(
+first_gen_college_student = RadioField(
         'Are you a first-generation college student?',
         choices=[('yes', 'Yes'), ('no', 'No')],
         validators=[DataRequired()]
     )
 
     # Race/Ethnicity
-    race_ethnicity = SelectField(
+race_ethnicity = SelectField(
         'Race/Ethnicity',
         choices=[
             ('asian', 'Asian'),
@@ -150,51 +139,39 @@ class ScholarshipApplicationForm(FlaskForm):
             ('native-american', 'Native American or Alaska Native'),
             ('pacific-islander', 'Native Hawaiian or Other Pacific Islander'),
             ('white', 'White'),
-            ('self-describe', 'Self-describe'),
             ('prefer-not-to-say', 'Prefer not to say')
         ],
         validators=[DataRequired()]
     )
-    race_self_describe = StringField(
-        'Please self-describe your race/ethnicity',
-        validators=[Optional()]
-    )
 
-    # New Fields
-    mean_yearly_income = DecimalField(
+    # Financial
+mean_yearly_income = DecimalField(
         'Mean Yearly Income',
         validators=[DataRequired(), NumberRange(min=0)],
         places=2
     )
 
-    expected_yearly_scholarships = DecimalField(
+expected_yearly_scholarships = DecimalField(
         'Expected Yearly Scholarships',
         validators=[DataRequired(), NumberRange(min=0)],
         places=2
     )
 
-    housing = SelectField(
+housing = SelectField(
         'Housing',
         choices=[
             ('on-campus', 'On-campus'),
             ('off-campus', 'Off-campus'),
-            ('at-home', 'At home')
         ],
         validators=[DataRequired()]
     )
 
-    submit = SubmitField('Submit')
+submit = SubmitField('Submit')
 
     # Custom Validators
-    def validate_expected_graduation(form, field):
-        pattern = r"^(Fall|Spring|Summer) (202[4-9]|203[0-4])$"
-        if not re.match(pattern, field.data):
-            raise ValidationError("Invalid format. Please select a season and year (e.g., Fall 2024).")
-
-    def validate_gender_self_describe(form, field):
-        if form.gender_identity.data == 'self-describe' and not field.data.strip():
-            raise ValidationError("Please self-describe your gender.")
-
-    def validate_race_self_describe(form, field):
-        if form.race_ethnicity.data == 'self-describe' and not field.data.strip():
-            raise ValidationError("Please self-describe your race/ethnicity.")
+def validate_gpa(self, field):
+        if field.data is not None:
+            if field.data < 0.0 or field.data > 4.0:
+                raise ValidationError("GPA must be between 0.0 and 4.0")
+            if len(str(field.data).split('.')[-1]) > 2:
+                raise ValidationError("GPA should have at most 2 decimal places")
