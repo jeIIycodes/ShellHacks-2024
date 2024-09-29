@@ -13,24 +13,14 @@ from wtforms.validators import (
     DataRequired,
     Optional,
     NumberRange,
+    Email,
     ValidationError,
-    Length
 )
 import re
 
 class ScholarshipApplicationForm(FlaskForm):
-
-    # 1. Personal Info
-    f_name = StringField('First Name', 
-        validators = [DataRequired(), Length(min=2, max=50, message ='Please enter a valid First Name.' )])
-    l_name = StringField('Last Name', validators = [DataRequired(),Length(min=2, max=50, message ='Please enter a valid Last Name.' )])
-    
-    date_of_birth = StringField('Date of Birth (MM/DD/YYYY)', validators=[DataRequired(message="Please enter date in MM/DD/YYYY format.")])
-
-
-    # 2. Academic Info Updated
+    # List of majors
     majors = [
-        ('', 'Select a Major'),
         ('accounting', 'Accounting'),
         ('anthropology', 'Anthropology'),
         ('art', 'Art'),
@@ -61,41 +51,36 @@ class ScholarshipApplicationForm(FlaskForm):
         ('sociology', 'Sociology'),
         ('software-engineering', 'Software Engineering'),
         ('statistics', 'Statistics'),
-        ('other', 'Other (please specify)')
     ]
+    # 'other' input option ^ if major is not listed ***
 
-    major = SelectField('Field of Study: Major', choices=majors, validators=[DataRequired()])
-    other_major = StringField('If Other, please specify your major')
-
-
-    academic_standing = SelectField(
-        'Academic Standing',
+    # Education Information
+    year_in_college = SelectField(
+        'Year in College',
         choices=[
-            ('', 'Select your academic standing'),
-            ('freshman', 'Freshman'),
-            ('sophomore', 'Sophomore'),
-            ('junior', 'Junior'),
-            ('senior', 'Senior'),
-            ('graduate', 'Graduate')
+            ('1', '1st Year'),
+            ('2', '2nd Year'),
+            ('3', '3rd Year'),
+            ('4', '4th Year'),
+            ('5', '5th Year'),
+            ('6', '6th Year'),
         ],
         validators=[DataRequired()]
     )
 
-graduation_month = SelectField(
-'Expected Graduation Month',
-choices=[
-('Spring', 'Spring'),
-     ('Fall', 'Fall'),
-        ('Summer', 'Summer')
-    ],
-    validators=[DataRequired()]
-)
+    # Field of Study/Major/Program - Now a searchable dropdown
+    field_of_study = SelectField(
+        'Field of Study/Major/Program',
+        choices=majors,
+        validators=[DataRequired()]
+    )
 
-graduation_year = SelectField(
-    'Expected Graduation Year',
-    choices=[(str(year), str(year)) for year in range(2024, 2030)],  # Example years
-    validators=[DataRequired()]
-)
+    # Expected Graduation Date (Season Year) - dropdown
+    expected_graduation = SelectField(
+        'Expected Graduation Date (Season Year)',
+        choices=[],  # To be populated dynamically
+        validators=[DataRequired()]
+    )
 
 gpa = DecimalField(
         'GPA (if applicable)',
@@ -111,13 +96,18 @@ gender_identity = SelectField(
             ('non-binary', 'Non-binary'),
             ('transgender', 'Transgender'),
             ('gender-non-conforming', 'Gender non-conforming'),
+            ('self-describe', 'Self-describe'),
             ('prefer-not-to-say', 'Prefer not to say')
         ],
         validators=[DataRequired()]
     )
+gender_self_describe = StringField(
+        'Please self-describe your gender',
+        validators=[Optional()]
+    )
 
     # Additional Demographics
-fl_resident = RadioField(
+florida_resident = RadioField(
         'Are you a Florida resident?',
         choices=[('yes', 'Yes'), ('no', 'No')],
         validators=[DataRequired()]
@@ -148,9 +138,14 @@ race_ethnicity = SelectField(
             ('native-american', 'Native American or Alaska Native'),
             ('pacific-islander', 'Native Hawaiian or Other Pacific Islander'),
             ('white', 'White'),
+            ('self-describe', 'Self-describe'),
             ('prefer-not-to-say', 'Prefer not to say')
         ],
         validators=[DataRequired()]
+    )
+race_self_describe = StringField(
+        'Please self-describe your race/ethnicity',
+        validators=[Optional()]
     )
 
     # 3. Financial Qs
@@ -166,18 +161,19 @@ housing = SelectField(
         choices=[
             ('on-campus', 'On-campus'),
             ('off-campus', 'Off-campus'),
+            ('at-home', 'At home')
         ],
         validators=[DataRequired()]
     )
 
-    is_financially_independent = RadioField(
+is_financially_independent = RadioField(
         'Are you financially independent?',
         choices=[('yes', 'Yes'), ('no', 'No')],
         validators=[DataRequired()]
     )
 
     # Household Income
-    household_income = SelectField(
+household_income = SelectField(
         'What is your annual household income?',
         choices=[
             ('', 'Select household income range'),
@@ -190,8 +186,8 @@ housing = SelectField(
         validators=[DataRequired()]
     )
 
- # Dependents
-    dependents = IntegerField(
+    # Dependents
+dependents = IntegerField(
         'Number of dependents in household (including yourself)',
         validators=[
             DataRequired(),
@@ -201,7 +197,7 @@ housing = SelectField(
     )
 
  # Educational Expenses - Based on FIU Tuition Calculator *can link in question*
-    est_expenses = DecimalField(
+est_expenses = DecimalField(
         'Estimated annual educational expenses at FIU',
         validators=[
             DataRequired(),
@@ -211,7 +207,7 @@ housing = SelectField(
     )
 
  # FAFSA Eligibility *can link below in question*
-    fafsa = RadioField(
+fafsa = RadioField(
         'Are you eligible to file a FAFSA (Free Application for Federal Student Aid)?',
         choices=[
             ('yes', 'Yes'),

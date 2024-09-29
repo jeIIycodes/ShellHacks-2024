@@ -1,0 +1,11 @@
+{
+    "years_in_college": 2,
+    "field_of_study": "Computer Science",
+    "gender_self_describe": "Female",
+    "florida_resident": true,
+    "first_gen_college_student": false,
+    "race_self_describe": "Asian",
+    "mean_yearly_income": 50000,
+    "expected_yearly_scholarships": 2000,
+    "housing": "On-campus"
+}
