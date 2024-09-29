@@ -7,13 +7,13 @@ import requests
 from flask import jsonify
 from SECRETS import GOOGLE_API_KEY
 
+
 app = Flask(__name__)
 
 
 @app.route("/")
 def index():
     return { 'status' : 'ok' }
-
 
 # Allowed Parameters:
 #    years_in_college
